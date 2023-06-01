@@ -1,0 +1,149 @@
+.home {
+  max-width: 500px;
+  margin: 0 auto;
+
+  h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 30px 0;
+    text-align: center;
+  }
+
+  .step {
+    .input__form {
+      .select__box {
+        border: 1px solid #ccc;
+        position: relative;
+        padding: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+
+        .sub__menu {
+          width: 100%;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          border: 1px solid #ccc;
+          transition: 0.1s;
+          opacity: 0;
+          visibility: hidden;
+          background-color: #fff;
+        }
+
+        .fa-chevron-down {
+          font-size: 12px;
+          transition: 0.1s;
+        }
+
+        &.show {
+          .sub__menu {
+            opacity: 1;
+            visibility: visible;
+          }
+
+          .fa-chevron-down {
+            transform: rotate(-180deg);
+          }
+        }
+
+        .item {
+          padding: 8px;
+        }
+      }
+
+      p {
+        margin-left: 15px;
+        margin-bottom: 10px;
+      }
+
+      input {
+        display: block;
+        border:1px solid #ccc;
+        outline: none;
+        padding: 8px;
+        width: 100%;
+        border-width: 1px;
+        color: #666;
+      }
+    }
+
+    .form__box {
+      display: flex;
+      gap: 30px;
+      flex-direction: column;
+    }
+
+    .btn__box {
+      display: flex;
+      justify-content: flex-end;
+
+      button {
+        background-color: #d8d8d8;
+        padding: 7px 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: none;
+        cursor: pointer;
+      }
+
+      @keyframes recordStart {
+        0% {
+          scale: 1;
+        }
+
+        
+
+        50% {
+          scale: 1.2;
+        }
+
+       
+
+        100% {
+          scale: 1;
+        }
+      }
+
+      &--record {
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+
+        button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          border-radius: 50%;
+          gap: 5px;
+          width: 50px;
+          height: 50px;
+
+          &::after {
+            content: '';
+            position: absolute;
+            border: 1px solid #d8d8d8;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.1s;
+          }
+        }
+
+        &.recording {
+          animation: recordStart 2s infinite ease-in-out;
+          button::after {
+            opacity: 1;
+            visibility: visible;
+          }
+        }
+      }
+    }
+    
+  }
+}

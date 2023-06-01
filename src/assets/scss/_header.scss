@@ -1,0 +1,18 @@
+.header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  padding: 30px 20px;
+  display: flex;
+  gap: 20px;
+  justify-content: flex-end;
+
+  a {
+    text-decoration: none;
+    color: #ccc;
+
+    &.active {
+      color: #666
+    }
+  }
+}
