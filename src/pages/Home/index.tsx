@@ -1,16 +1,28 @@
-import InputForm from './InputForm';
+import { useState } from 'react';
+
+import { FormProvider } from 'src/providers/FormContext';
+
 import RecordForm from './RecordForm';
+import InputForm from './InputForm';
+import SuccessForm from './SuccessForm';
+
+import { StepsType } from 'src/models/home.model';
 
 const Home = () => {
-  return (
-    <div className='home'>
-      <h1>Consent Form</h1>
+  const [steps, setSteps] = useState<StepsType>('input-form');
 
-      <div className='step'>
-        {/* <InputForm /> */}
-        <RecordForm />
+  return (
+    <FormProvider>
+      <div className='home'>
+        <h1>Consent Form</h1>
+
+        <div className='step'>
+          {steps === 'input-form' && <InputForm setSteps={setSteps} />}
+          {steps === 'record-form' && <RecordForm setSteps={setSteps} />}
+          {steps === 'success-form' && <SuccessForm />}
+        </div>
       </div>
-    </div>
+    </FormProvider>
   );
 };
 

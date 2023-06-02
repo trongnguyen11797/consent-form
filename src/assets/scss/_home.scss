@@ -1,15 +1,12 @@
 .home {
-  max-width: 500px;
-  margin: 0 auto;
-
-  h1 {
-    font-size: 20px;
-    font-weight: 700;
-    margin: 30px 0;
-    text-align: center;
-  }
-
   .step {
+    .record__form,
+    .success__form,
+    .input__form {
+      display: flex;
+      gap: 30px;
+      flex-direction: column;
+    }
     .input__form {
       .select__box {
         border: 1px solid #ccc;
@@ -30,6 +27,7 @@
           opacity: 0;
           visibility: hidden;
           background-color: #fff;
+          z-index: 2;
         }
 
         .fa-chevron-down {
@@ -37,8 +35,26 @@
           transition: 0.1s;
         }
 
+        .overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          z-index: 1;
+          visibility: hidden;
+          opacity: 0;
+          transition: 0.1s;
+          cursor: initial;
+        }
+
         &.show {
           .sub__menu {
+            opacity: 1;
+            visibility: visible;
+          }
+
+          .overlay {
             opacity: 1;
             visibility: visible;
           }
@@ -60,7 +76,7 @@
 
       input {
         display: block;
-        border:1px solid #ccc;
+        border: 1px solid #ccc;
         outline: none;
         padding: 8px;
         width: 100%;
@@ -69,81 +85,94 @@
       }
     }
 
-    .form__box {
-      display: flex;
-      gap: 30px;
-      flex-direction: column;
-    }
-
-    .btn__box {
-      display: flex;
-      justify-content: flex-end;
-
-      button {
-        background-color: #d8d8d8;
-        padding: 7px 10px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        border: none;
-        cursor: pointer;
-      }
-
+    .record__form {
       @keyframes recordStart {
         0% {
           scale: 1;
         }
 
-        
-
         50% {
           scale: 1.2;
         }
-
-       
 
         100% {
           scale: 1;
         }
       }
 
-      &--record {
+      .btn__record {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 5px;
+
+        &::after {
+          content: '';
+          position: absolute;
+          border: 1px solid #d8d8d8;
+          border-radius: 50%;
+          width: 60px;
+          height: 60px;
+          opacity: 0;
+          visibility: hidden;
+          transition: 0.1s;
+        }
+      }
+
+      .record__box {
+        display: flex;
         justify-content: center;
         align-items: center;
         gap: 20px;
 
-        button {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-direction: column;
-          border-radius: 50%;
-          gap: 5px;
-          width: 50px;
-          height: 50px;
-
-          &::after {
-            content: '';
-            position: absolute;
-            border: 1px solid #d8d8d8;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.1s;
-          }
-        }
-
         &.recording {
           animation: recordStart 2s infinite ease-in-out;
-          button::after {
+          .btn__record::after {
             opacity: 1;
             visibility: visible;
           }
         }
       }
     }
-    
+
+    .success__form {
+      text-align: center;
+
+      .link__to {
+        text-decoration: underline;
+      }
+    }
+
+    .btn__common {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #d8d8d8;
+    }
+
+    .btn__step {
+      background-color: #d8d8d8;
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border: none;
+      cursor: pointer;
+      align-self: end;
+    }
+
+    .btn__box {
+      display: flex;
+      justify-content: flex-end;
+      gap: 20px;
+    }
+  }
+
+  .error__msg {
+    font-size: 12px;
+    color: red;
   }
 }

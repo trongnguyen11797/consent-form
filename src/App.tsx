@@ -1,8 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import './assets/scss/app.scss';
+import { URL_PAGE } from './common/constant';
+
 import Header from './layout/Header';
+
 import Home from './pages/Home';
+import Consent from './pages/Consent';
+
+import './assets/scss/app.scss';
 
 function App() {
   return (
@@ -12,7 +17,7 @@ function App() {
         <main className='content'>
           <Routes>
             <Route index element={<Home />} />
-            {/* <Route path={LINK_CONSTANT.blogDetail} element={<BlogDetail />} /> */}
+            <Route path={URL_PAGE.consent} element={<Consent />} />
           </Routes>
         </main>
       </div>
