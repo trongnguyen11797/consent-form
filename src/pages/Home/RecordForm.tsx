@@ -1,65 +1,86 @@
-import { useContext, useState } from 'react';
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import { useReactMediaRecorder } from 'react-media-recorder';
+import { useContext, useEffect, useState } from 'react';
 
 import { FormContext } from 'src/providers/FormContext';
-import { generatorUUID } from 'src/common/constant';
+import { LOCAL_STORAGE_KEY, generatorUUID, toDataUrl } from 'src/common/constant';
 
 import AudioCustom from 'src/components/AudioCustom';
-import { DataType, PropsType } from 'src/models/home.model';
+
+import { DataType, PropsType, StatusRecordType } from 'src/models/home.model';
 
 const RecordForm = (props: PropsType) => {
-  const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
-
-  const { status, startRecording, stopRecording, mediaBlobUrl, clearBlobUrl } = useReactMediaRecorder({ video: false });
-
   const { data, setData } = useContext(FormContext);
 
-  const [isPlay, setIsPlay] = useState(false);
+  const [transcript, setTranscript] = useState<string>('');
 
-  let isCheckSaid = (transcript.toLocaleLowerCase() === 'yes' || transcript.toLocaleLowerCase() === 'no') && status === 'stopped';
-  if (data.language?.langCode === 'en-US') {
-    isCheckSaid = (transcript.toLocaleLowerCase() === 'yes' || transcript.toLocaleLowerCase() === 'no') && status === 'stopped';
-  } else if (data.language?.langCode === 'fr-FR') {
-    isCheckSaid = (transcript.toLocaleLowerCase() === 'oui' || transcript.toLocaleLowerCase() === 'non') && status === 'stopped';
-  }
+  const [audioUrl, setAudioUrl] = useState<string>('');
+
+  const [isPlay, setIsPlay] = useState(false);
+  const [status, setStatus] = useState<StatusRecordType>('init');
+
+  const langCode = data.language?.langCode;
+
+  useEffect(() => {
+    (() => {
+      let text = '';
+
+      if (langCode === 'en-US') {
+        text = `You understand that by using the site or site services, you agree to be bound by this agreement. If you do not accept this agreement in its entirety, you must not access or use the site or the site services. Do you agree to this agreement? Please respond by saying "Yes" or "No".`;
+      } else if (langCode === 'fr-FR') {
+        text = `Vous comprenez qu'en utilisant le site ou les services du site, vous acceptez d'être lié par cet accord. Si vous n'acceptez pas cet accord dans son intégralité, vous ne devez pas accéder ou utiliser le site ou les services du site. Êtes-vous d'accord avec cet accord ? Veuillez répondre en disant "Oui" ou "Non".`;
+      }
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = langCode || 'en-US';
+      speechSynthesis.speak(utterance);
+    })();
+  }, []);
+
+  const onIsCheckSaid = (currentTranscript?: string) => {
+    let isCheckSaid = false;
+    if (langCode === 'en-US') {
+      isCheckSaid = ['yes', 'no'].includes(currentTranscript || transcript) && !isPlay;
+    } else if (langCode === 'fr-FR') {
+      isCheckSaid = ['oui', 'non'].includes(currentTranscript || transcript) && !isPlay;
+    }
+
+    return isCheckSaid;
+  };
 
   const onRetry = () => {
-    resetTranscript();
-    clearBlobUrl();
+    setAudioUrl('');
+    setTranscript('');
     setIsPlay(false);
+    setStatus('init');
   };
 
   const onNextStep = () => {
     const text = transcript.toLocaleLowerCase();
-    const isAgree = text === 'yes' || text === 'oui' ? true : false;
-    const currentData: DataType = { ...data, record: transcript, audioSrc: mediaBlobUrl || '', isAgree };
-    setData(currentData);
-    let dataLocalStorage = JSON.parse(localStorage.getItem('consent-form') || '[]');
+    const isAgree = ['yes', 'oui'].includes(text) ? true : false;
 
-    if (Object.keys(dataLocalStorage).length > 0) {
-      dataLocalStorage = [
-        ...dataLocalStorage,
-        {
-          ...currentData,
-          id: generatorUUID(),
-        },
-      ];
-    } else {
-      dataLocalStorage = [
-        {
-          ...currentData,
-          id: generatorUUID(),
-        },
-      ];
-    }
-    localStorage.setItem('consent-form', JSON.stringify(dataLocalStorage));
-    props.setSteps('success-form');
+    toDataUrl(audioUrl || '', (audioUrl) => {
+      const currentData: DataType = { ...data, record: transcript, audioUrl, isAgree };
+      setData(currentData);
+      let dataLocalStorage = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.consent_form) || '[]');
+
+      if (Object.keys(dataLocalStorage).length > 0) {
+        dataLocalStorage = [
+          ...dataLocalStorage,
+          {
+            ...currentData,
+            id: generatorUUID(),
+          },
+        ];
+      } else {
+        dataLocalStorage = [
+          {
+            ...currentData,
+            id: generatorUUID(),
+          },
+        ];
+      }
+      localStorage.setItem(LOCAL_STORAGE_KEY.consent_form, JSON.stringify(dataLocalStorage));
+      props.setSteps('success-form');
+    });
   };
-
-  if (!browserSupportsSpeechRecognition) {
-    return <span>Browser doesn't support speech recognition.</span>;
-  }
 
   return (
     <div className='record__form'>
@@ -86,19 +107,19 @@ const RecordForm = (props: PropsType) => {
       )}
 
       <AudioCustom
-        status={status}
         transcript={transcript}
-        startRecording={startRecording}
-        stopRecording={stopRecording}
-        SpeechRecognition={SpeechRecognition}
-        isCheckSaid={isCheckSaid}
+        onIsCheckSaid={onIsCheckSaid}
+        audioUrl={audioUrl || ''}
         onRetry={onRetry}
         isPlay={isPlay}
+        status={status}
         setIsPlay={setIsPlay}
-        mediaBlobUrl={mediaBlobUrl || ''}
+        setTranscript={setTranscript}
+        setAudioUrl={setAudioUrl}
+        setStatus={setStatus}
       />
 
-      {isCheckSaid && (
+      {onIsCheckSaid() && (
         <div className='btn__box'>
           <button className='btn__step' onClick={onRetry}>
             Retry

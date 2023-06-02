@@ -34,7 +34,7 @@ const InputForm = (props: PropsType) => {
   };
 
   return (
-    <div className='input__form form__box'>
+    <div className='input__form'>
       <div className='form__item'>
         <p>Name</p>
         <input

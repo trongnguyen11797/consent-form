@@ -1,0 +1,44 @@
+.consent {
+  .link__to__home {
+    background-color: #d8d8d8;
+    padding: 10px 5px;
+  }
+
+  .no__data {
+    max-width: 70%;
+    margin: 0 auto;
+  }
+
+  &__wrapper {
+    margin-top: 10px;
+  }
+
+  &__header {
+    font-size: 20px;
+  }
+
+  &__item {
+    padding: 10px 20px;
+
+    &:nth-child(odd) {
+      background-color: rgb(216, 216, 216, 0.7);
+    }
+    .left {
+      h3 {
+        font-weight: 700;
+      }
+    }
+
+    .right {
+      .fa-check,
+      .fa-xmark {
+        font-size: 25px;
+      }
+
+      .fa-xmark {
+        position: relative;
+        left: -3px;
+      }
+    }
+  }
+}
