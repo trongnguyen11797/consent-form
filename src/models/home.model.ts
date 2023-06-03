@@ -24,6 +24,7 @@ export type AudioCustomPropsType = {
   audioUrl: string;
   onIsCheckSaid: (currentTranscript?: string) => boolean;
   isPlay: boolean;
+  isRead: boolean;
   status: StatusRecordType;
   onRetry: () => void;
   setIsPlay: React.Dispatch<React.SetStateAction<boolean>>;

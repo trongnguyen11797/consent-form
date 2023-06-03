@@ -16,6 +16,7 @@ const RecordForm = (props: PropsType) => {
 
   const [isPlay, setIsPlay] = useState(false);
   const [status, setStatus] = useState<StatusRecordType>('init');
+  const [isRead, setIsRead] = useState<boolean>(true);
 
   const langCode = data.language?.langCode;
 
@@ -28,9 +29,13 @@ const RecordForm = (props: PropsType) => {
       } else if (langCode === 'fr-FR') {
         text = `Vous comprenez qu'en utilisant le site ou les services du site, vous acceptez d'être lié par cet accord. Si vous n'acceptez pas cet accord dans son intégralité, vous ne devez pas accéder ou utiliser le site ou les services du site. Êtes-vous d'accord avec cet accord ? Veuillez répondre en disant "Oui" ou "Non".`;
       }
-      const utterance = new SpeechSynthesisUtterance(text);
+      const utterance = new window.SpeechSynthesisUtterance(text);
       utterance.lang = langCode || 'en-US';
       speechSynthesis.speak(utterance);
+      utterance.onend = () => {
+        console.log('??');
+        setIsRead(false);
+      };
     })();
   }, []);
 
@@ -113,6 +118,7 @@ const RecordForm = (props: PropsType) => {
         onRetry={onRetry}
         isPlay={isPlay}
         status={status}
+        isRead={isRead}
         setIsPlay={setIsPlay}
         setTranscript={setTranscript}
         setAudioUrl={setAudioUrl}

@@ -12,9 +12,7 @@
         border: 1px solid #ccc;
         position: relative;
         padding: 8px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+
         cursor: pointer;
 
         .sub__menu {
@@ -119,11 +117,6 @@
       }
 
       .record__box {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 20px;
-
         &.recording {
           animation: recordStart 2s infinite ease-in-out;
           .btn__record::after {
@@ -145,10 +138,6 @@
     .btn__step {
       background-color: #d8d8d8;
       padding: 7px 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
       border: none;
       cursor: pointer;
       align-self: end;

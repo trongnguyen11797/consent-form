@@ -33,6 +33,10 @@ const InputForm = (props: PropsType) => {
     props.setSteps('record-form');
   };
 
+  const selectBoxClass = `select__box flex-center flex-between ${isSelect ? 'show' : ''}`;
+  const isRequiredName = isRequired && !data.name && <span className='error__msg'>Please enter your name</span>;
+  const isRequiredLanguage = isRequired && !data.language?.langCode && <span className='error__msg'>Please select language</span>;
+
   return (
     <div className='input__form'>
       <div className='form__item'>
@@ -50,12 +54,12 @@ const InputForm = (props: PropsType) => {
             }));
           }}
         />
-        {isRequired && !data.name && <span className='error__msg'>Please enter your name</span>}
+        {isRequiredName}
       </div>
 
       <div className='form__item'>
         <p>Language</p>
-        <div className={`select__box ${isSelect ? 'show' : ''}`} onClick={() => setIsSelect(!isSelect)}>
+        <div className={selectBoxClass} onClick={() => setIsSelect(!isSelect)}>
           <div className='overlay' onClick={() => setIsSelect(false)}></div>
           {currentSelect}
           <i className='fa-solid fa-chevron-down'></i>
@@ -68,10 +72,10 @@ const InputForm = (props: PropsType) => {
             </div>
           </div>
         </div>
-        {isRequired && !data.language?.langCode && <span className='error__msg'>Please select language</span>}
+        {isRequiredLanguage}
       </div>
 
-      <button className='btn__step' onClick={onNextStep}>
+      <button className='btn__step flex-center flex-between flex-gap-1' onClick={onNextStep}>
         Next
         <i className='fa-solid fa-arrow-right-long'></i>
       </button>

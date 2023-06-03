@@ -7,6 +7,10 @@ button {
   border: 1px solid #d8d8d8;
   background-color: #d8d8d8;
   cursor: pointer;
+
+  &:disabled {
+    cursor: initial;
+  }
 }
 
 .d-flex {

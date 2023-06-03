@@ -71,7 +71,7 @@ const AudioCustom = (props: AudioCustomPropsType) => {
     }
   };
 
-  const wrapperClass = `record__box ${props.isPlay ? 'recording' : ''}`;
+  const wrapperClass = `record__box flex-gap-2  flex-center ${props.isPlay ? 'recording' : ''}`;
 
   const isSpeechSuccess = props.transcript && !props.isPlay;
   const isSpeechPending = props.transcript && props.isPlay;
@@ -112,7 +112,7 @@ const AudioCustom = (props: AudioCustomPropsType) => {
         <div className='flex-center flex-column flex-gap-1'>
           {renderSpeech}
 
-          <button className='btn__record btn__common' onClick={onRecord}>
+          <button className='btn__record btn__common' disabled={props.isRead} onClick={onRecord}>
             <i className='fa-solid fa-microphone'></i>
           </button>
 
