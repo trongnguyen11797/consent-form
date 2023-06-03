@@ -17,6 +17,7 @@ const RecordForm = (props: PropsType) => {
   const [isPlay, setIsPlay] = useState(false);
   const [status, setStatus] = useState<StatusRecordType>('init');
   const [isRead, setIsRead] = useState<boolean>(true);
+  const [isTimeOut, setIsTimeOut] = useState<boolean>(false);
 
   const langCode = data.language?.langCode;
 
@@ -30,10 +31,24 @@ const RecordForm = (props: PropsType) => {
         text = `Vous comprenez qu'en utilisant le site ou les services du site, vous acceptez d'être lié par cet accord. Si vous n'acceptez pas cet accord dans son intégralité, vous ne devez pas accéder ou utiliser le site ou les services du site. Êtes-vous d'accord avec cet accord ? Veuillez répondre en disant "Oui" ou "Non".`;
       }
       const utterance = new window.SpeechSynthesisUtterance(text);
+
       utterance.lang = langCode || 'en-US';
       speechSynthesis.speak(utterance);
+
+      const timeOutRead = setTimeout(() => {
+        setIsTimeOut(true);
+        setIsRead(false);
+      }, 3000);
+
+      utterance.onstart = () => {
+        clearTimeout(timeOutRead);
+        setIsRead(true);
+      };
       utterance.onend = () => {
-        console.log('??');
+        setIsRead(false);
+      };
+      utterance.onerror = () => {
+        setIsTimeOut(true);
         setIsRead(false);
       };
     })();
@@ -55,6 +70,7 @@ const RecordForm = (props: PropsType) => {
     setTranscript('');
     setIsPlay(false);
     setStatus('init');
+    setIsTimeOut(false);
   };
 
   const onNextStep = () => {
@@ -87,6 +103,17 @@ const RecordForm = (props: PropsType) => {
     });
   };
 
+  const errorRead =
+    langCode === 'en-US' ? (
+      <p className='error__msg'>
+        An error occurred when I read the passage to you, we will fix this problem soon, thanks interested in my website have a nice day
+      </p>
+    ) : (
+      <p className='error__msg'>
+        Une erreur s'est produite lorsque je vous ai lu le passage, nous réglerons ce problème bientôt, merci intéressé par mon site bonne journée
+      </p>
+    );
+
   return (
     <div className='record__form'>
       {data.language?.langCode === 'en-US' && (
@@ -111,6 +138,8 @@ const RecordForm = (props: PropsType) => {
         </>
       )}
 
+      {isTimeOut && errorRead}
+
       <AudioCustom
         transcript={transcript}
         onIsCheckSaid={onIsCheckSaid}
@@ -127,11 +156,11 @@ const RecordForm = (props: PropsType) => {
 
       {onIsCheckSaid() && (
         <div className='btn__box'>
-          <button className='btn__step' onClick={onRetry}>
+          <button className='btn__step flex-center flex-between flex-gap-1' onClick={onRetry}>
             Retry
             <i className='fa-solid fa-rotate-right'></i>
           </button>
-          <button className='btn__step' onClick={onNextStep}>
+          <button className='btn__step flex-center flex-between flex-gap-1' onClick={onNextStep}>
             Save
             <i className='fa-solid fa-arrow-right-long'></i>
           </button>
