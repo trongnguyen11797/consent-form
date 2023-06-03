@@ -1,0 +1,157 @@
+.home {
+  .step {
+    .record__form,
+    .success__form,
+    .input__form {
+      display: flex;
+      gap: 30px;
+      flex-direction: column;
+    }
+    .input__form {
+      .select__box {
+        border: 1px solid #ccc;
+        position: relative;
+        padding: 8px;
+
+        cursor: pointer;
+
+        .sub__menu {
+          width: 100%;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          border: 1px solid #ccc;
+          transition: 0.1s;
+          opacity: 0;
+          visibility: hidden;
+          background-color: #fff;
+          z-index: 2;
+        }
+
+        .fa-chevron-down {
+          font-size: 12px;
+          transition: 0.1s;
+        }
+
+        .overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          z-index: 1;
+          visibility: hidden;
+          opacity: 0;
+          transition: 0.1s;
+          cursor: initial;
+        }
+
+        &.show {
+          .sub__menu {
+            opacity: 1;
+            visibility: visible;
+          }
+
+          .overlay {
+            opacity: 1;
+            visibility: visible;
+          }
+
+          .fa-chevron-down {
+            transform: rotate(-180deg);
+          }
+        }
+
+        .item {
+          padding: 8px;
+        }
+      }
+
+      p {
+        margin-left: 15px;
+        margin-bottom: 10px;
+      }
+
+      input {
+        display: block;
+        border: 1px solid #ccc;
+        outline: none;
+        padding: 8px;
+        width: 100%;
+        border-width: 1px;
+        color: #666;
+      }
+    }
+
+    .record__form {
+      @keyframes recordStart {
+        0% {
+          scale: 1;
+        }
+
+        50% {
+          scale: 1.2;
+        }
+
+        100% {
+          scale: 1;
+        }
+      }
+
+      .btn__record {
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 5px;
+
+        &::after {
+          content: '';
+          position: absolute;
+          border: 1px solid #d8d8d8;
+          border-radius: 50%;
+          width: 60px;
+          height: 60px;
+          opacity: 0;
+          visibility: hidden;
+          transition: 0.1s;
+        }
+      }
+
+      .record__box {
+        &.recording {
+          animation: recordStart 2s infinite ease-in-out;
+          .btn__record::after {
+            opacity: 1;
+            visibility: visible;
+          }
+        }
+      }
+    }
+
+    .success__form {
+      text-align: center;
+
+      .link__to {
+        text-decoration: underline;
+      }
+    }
+
+    .btn__step {
+      background-color: #d8d8d8;
+      padding: 7px 10px;
+      border: none;
+      cursor: pointer;
+      align-self: end;
+    }
+
+    .btn__box {
+      display: flex;
+      justify-content: flex-end;
+      gap: 20px;
+    }
+  }
+
+  .error__msg {
+    font-size: 12px;
+    color: red;
+  }
+}
